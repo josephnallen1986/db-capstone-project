@@ -1,4 +1,4 @@
-SELECT menu.MenuName
+SELECT DISTINCT menu.MenuName
 FROM menu
 INNER JOIN orderitems
 	ON orderitems.MenuID = menu.MenuID
