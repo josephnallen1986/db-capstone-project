@@ -134,6 +134,9 @@ END //
 
 DELIMITER ;
 ```
+## Tableau Public Worksheets and Dashboard
+[dp-capstone-project](https://public.tableau.com/views/LittleLemonDB_17234778829910/SalesDashboar?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+
 ## Python Exercises
 ```python
 import mysql.connector as connector
