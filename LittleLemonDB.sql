@@ -1,155 +1,240 @@
--- MySQL Workbench Forward Engineering
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+--
+-- Host: localhost    Database: littlelemondb
+-- ------------------------------------------------------
+-- Server version	9.0.0
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- -----------------------------------------------------
--- Schema LittleLemonDB
--- -----------------------------------------------------
+--
+-- Table structure for table `bookings`
+--
 
--- -----------------------------------------------------
--- Schema LittleLemonDB
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `LittleLemonDB` DEFAULT CHARACTER SET utf8 ;
-USE `LittleLemonDB` ;
-
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`CustomerDetails`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`CustomerDetails` (
-  `CustomerID` INT NOT NULL,
-  `CustomerName` VARCHAR(100) NULL,
-  `ContactNumber` VARCHAR(15) NULL,
-  `Email` VARCHAR(100) NULL,
-  PRIMARY KEY (`CustomerID`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`StaffInformation`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`StaffInformation` (
-  `StaffID` INT NOT NULL,
-  `StaffName` VARCHAR(100) NULL,
-  `Role` VARCHAR(50) NULL,
-  `Salary` DECIMAL NULL,
-  PRIMARY KEY (`StaffID`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`Bookings`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Bookings` (
-  `BookingID` INT NOT NULL,
-  `BookingDate` DATE NULL,
-  `TableNumber` INT NULL,
-  `CustomerID` INT NULL,
-  `StaffID` INT NULL,
+DROP TABLE IF EXISTS `bookings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bookings` (
+  `BookingID` int NOT NULL,
+  `BookingDate` date DEFAULT NULL,
+  `TableNumber` int DEFAULT NULL,
+  `CustomerID` int DEFAULT NULL,
+  `StaffID` int DEFAULT NULL,
   PRIMARY KEY (`BookingID`),
-  INDEX `CustomerID_idx` (`CustomerID` ASC) VISIBLE,
-  INDEX `StaffID_idx` (`StaffID` ASC) VISIBLE,
-  CONSTRAINT `CustomerID`
-    FOREIGN KEY (`CustomerID`)
-    REFERENCES `LittleLemonDB`.`CustomerDetails` (`CustomerID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `StaffID`
-    FOREIGN KEY (`StaffID`)
-    REFERENCES `LittleLemonDB`.`StaffInformation` (`StaffID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `CustomerID_idx` (`CustomerID`),
+  KEY `StaffID_idx` (`StaffID`),
+  CONSTRAINT `CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customerdetails` (`CustomerID`),
+  CONSTRAINT `StaffID` FOREIGN KEY (`StaffID`) REFERENCES `staffinformation` (`StaffID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `bookings`
+--
 
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`Orders`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
-  `OrderID` INT NOT NULL,
-  `OrderDate` DATE NULL,
-  `Quantity` INT NULL,
-  `TotalCost` DECIMAL NULL,
-  `BookingID` INT NULL,
-  PRIMARY KEY (`OrderID`),
-  INDEX `BookingID_idx` (`BookingID` ASC) VISIBLE,
-  CONSTRAINT `BookingID`
-    FOREIGN KEY (`BookingID`)
-    REFERENCES `LittleLemonDB`.`Bookings` (`BookingID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+LOCK TABLES `bookings` WRITE;
+/*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Table structure for table `customerdetails`
+--
 
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`OrderDeliveryStatus`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`OrderDeliveryStatus` (
-  `OrderID` INT NULL,
-  `DeliveryDate` DATE NULL,
-  `Status` VARCHAR(50) NULL,
-  INDEX `OrderID_idx` (`OrderID` ASC) VISIBLE,
-  CONSTRAINT `OrderID`
-    FOREIGN KEY (`OrderID`)
-    REFERENCES `LittleLemonDB`.`Orders` (`OrderID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+DROP TABLE IF EXISTS `customerdetails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customerdetails` (
+  `CustomerID` int NOT NULL,
+  `CustomerName` varchar(100) DEFAULT NULL,
+  `ContactNumber` varchar(15) DEFAULT NULL,
+  `Email` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`CustomerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `customerdetails`
+--
 
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`Menu`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menu` (
-  `MenuID` INT NOT NULL,
-  `Cuisine` VARCHAR(50) NULL,
-  `Price` DECIMAL NULL,
-  PRIMARY KEY (`MenuID`))
-ENGINE = InnoDB;
+LOCK TABLES `customerdetails` WRITE;
+/*!40000 ALTER TABLE `customerdetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customerdetails` ENABLE KEYS */;
+UNLOCK TABLES;
 
+--
+-- Table structure for table `menu`
+--
 
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`MenuItems`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItems` (
-  `MenuItemID` INT NOT NULL,
-  `MenuID` INT NULL,
-  `ItemName` VARCHAR(50) NULL,
-  `ItemType` VARCHAR(50) NULL,
+DROP TABLE IF EXISTS `menu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menu` (
+  `MenuID` int NOT NULL,
+  `MenuName` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`MenuID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menu`
+--
+
+LOCK TABLES `menu` WRITE;
+/*!40000 ALTER TABLE `menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `menuitems`
+--
+
+DROP TABLE IF EXISTS `menuitems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menuitems` (
+  `MenuItemID` int NOT NULL,
+  `MenuID` int DEFAULT NULL,
+  `ItemName` varchar(50) DEFAULT NULL,
+  `ItemType` varchar(50) DEFAULT NULL,
+  `Price` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`MenuItemID`),
-  INDEX `MenuItemID_idx` (`MenuID` ASC) VISIBLE,
-  CONSTRAINT `MenuID`
-    FOREIGN KEY (`MenuID`)
-    REFERENCES `LittleLemonDB`.`Menu` (`MenuID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `MenuItemID_idx` (`MenuID`),
+  CONSTRAINT `MenuID` FOREIGN KEY (`MenuID`) REFERENCES `menu` (`MenuID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `menuitems`
+--
 
--- -----------------------------------------------------
--- Table `LittleLemonDB`.`OrderItems`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`OrderItems` (
-  `OrderID` INT NOT NULL,
-  `MenuItemID` INT NULL,
-  `Quantity` INT NULL,
-  `Price` DECIMAL NULL,
+LOCK TABLES `menuitems` WRITE;
+/*!40000 ALTER TABLE `menuitems` DISABLE KEYS */;
+/*!40000 ALTER TABLE `menuitems` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderdeliverystatus`
+--
+
+DROP TABLE IF EXISTS `orderdeliverystatus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orderdeliverystatus` (
+  `OrderID` int DEFAULT NULL,
+  `DeliveryDate` date DEFAULT NULL,
+  `Status` varchar(50) DEFAULT NULL,
+  KEY `OrderID_idx` (`OrderID`),
+  CONSTRAINT `OrderID` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orderdeliverystatus`
+--
+
+LOCK TABLES `orderdeliverystatus` WRITE;
+/*!40000 ALTER TABLE `orderdeliverystatus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderdeliverystatus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orderitems`
+--
+
+DROP TABLE IF EXISTS `orderitems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orderitems` (
+  `OrderID` int NOT NULL,
+  `Quantity` int DEFAULT NULL,
+  `Price` decimal(10,0) DEFAULT NULL,
+  `OrderItemscol` varchar(45) DEFAULT NULL,
+  `MenuID` int DEFAULT NULL,
   PRIMARY KEY (`OrderID`),
-  INDEX `MenuItemID_idx` (`MenuItemID` ASC) VISIBLE,
-  CONSTRAINT `OrderID`
-    FOREIGN KEY (`OrderID`)
-    REFERENCES `LittleLemonDB`.`Orders` (`OrderID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `MenuItemID`
-    FOREIGN KEY (`MenuItemID`)
-    REFERENCES `LittleLemonDB`.`MenuItems` (`MenuItemID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+  KEY `Menu_idx` (`MenuID`),
+  CONSTRAINT `Menu` FOREIGN KEY (`MenuID`) REFERENCES `menu` (`MenuID`),
+  CONSTRAINT `Orders` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `orderitems`
+--
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+LOCK TABLES `orderitems` WRITE;
+/*!40000 ALTER TABLE `orderitems` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orderitems` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `OrderID` int NOT NULL,
+  `OrderDate` date DEFAULT NULL,
+  `TotalQuantity` int DEFAULT NULL,
+  `TotalCost` decimal(10,0) DEFAULT NULL,
+  `BookingID` int DEFAULT NULL,
+  PRIMARY KEY (`OrderID`),
+  KEY `BookingID_idx` (`BookingID`),
+  CONSTRAINT `BookingID` FOREIGN KEY (`BookingID`) REFERENCES `bookings` (`BookingID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `staffinformation`
+--
+
+DROP TABLE IF EXISTS `staffinformation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `staffinformation` (
+  `StaffID` int NOT NULL,
+  `StaffName` varchar(100) DEFAULT NULL,
+  `Role` varchar(50) DEFAULT NULL,
+  `Salary` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`StaffID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `staffinformation`
+--
+
+LOCK TABLES `staffinformation` WRITE;
+/*!40000 ALTER TABLE `staffinformation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `staffinformation` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-08-10 13:02:15
